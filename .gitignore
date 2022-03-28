@@ -1,2 +1,4 @@
 .mirian/*
 .env
+*.pyc
+dist/*

@@ -1,4 +1,5 @@
 from flask import Flask,request
+from flask_cors import CORS
 import configparser
 import os
 import json
@@ -18,7 +19,7 @@ def MirianDbServer():
   passName = str(int(root["root"]["password"]))
   rootName = root["root"]["default"]
   app = Flask(__name__)
-
+  CORS(app)
   @app.route("/") 
   def index():
     return ""
@@ -27,14 +28,14 @@ def MirianDbServer():
   def func1():
     return "" 
 
-  @app.route(f"/@{rootName}/read-database",methods=["GET"])
+  @app.route(f"/@{rootName}/read-database")
   def func2():
     try:
       return json.dumps({"error":False,"values":Database.read(passName)})
     except:
       return json.dumps({"error":True})
 
-  @app.route(f"/@{rootName}/write-database/",methods=["GET"])
+  @app.route(f"/@{rootName}/write-database/")
   def func3():
     write = request.args.get("value",default = "[]")
     print(write)
@@ -44,4 +45,5 @@ def MirianDbServer():
       return json.dumps({"writed":False})
     return json.dumps({"writed":True})
 
-  app.run(host="0.0.0.0",port=7021)
+  print(f"Server Started: http://localhost:7021/@{rootName}")
+  app.run(host="localhost",port=7021)
